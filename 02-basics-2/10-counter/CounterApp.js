@@ -14,25 +14,10 @@ export default defineComponent({
       counterValue.value--
     }
 
-    function isDecrementDisable() {
-      return +counterValue.value < 1
-    }
-
-    function isIncrementDisable() {
-      return +counterValue.value > 4
-    }
-
-    function getCounterValue() {
-      return counterValue.value
-    }
-
     return {
       counterValue,
       incrementBtn,
       decrementBtn,
-      isIncrementDisable,
-      isDecrementDisable,
-      getCounterValue
     }
   },
 
@@ -43,18 +28,18 @@ export default defineComponent({
         type="button"
         aria-label="Decrement"
         @click="decrementBtn"
-        :disabled="isDecrementDisable()"
+        :disabled="counterValue < 1"
       >➖
       </button>
 
-      <span class="count" data-testid="count" v-html="getCounterValue()"></span>
+      <span class="count" data-testid="count"> {{ counterValue }}</span>
 
       <button
         class="button button--secondary"
         type="button"
         aria-label="Increment"
         @click="incrementBtn"
-        :disabled="isIncrementDisable()"
+        :disabled="counterValue > 4"
       >➕
       </button>
     </div>

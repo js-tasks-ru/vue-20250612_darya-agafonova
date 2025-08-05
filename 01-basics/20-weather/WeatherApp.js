@@ -8,6 +8,7 @@ export default defineComponent({
       let temperature = +geoItem.current.temp - 273.15;
       return temperature.toFixed(1)
     }
+
     function getPressure(geoItem) {
       let pressure = +geoItem.current.pressure * 0.75;
       return Math.round(pressure)
@@ -18,21 +19,8 @@ export default defineComponent({
     }
 
     function isNight(geoItem) {
-      let sunrise = new Date();
-      let currentSunrice = geoItem.current.sunrise.split(":");
-      sunrise.setHours(+currentSunrice[0], +currentSunrice[1], 0, 0);
-
-      let sunset = new Date();
-      let currentSunset = geoItem.current.sunset.split(":");
-      sunset.setHours(+currentSunset[0], +currentSunset[1], 0, 0);
-
-      let nowTime = new Date();
-      let currentTime = geoItem.current.dt.split(":");
-      nowTime.setHours(+currentTime[0], +currentTime[1], 0, 0);
-
-
-      return sunrise.getTime() > nowTime.getTime()
-      || sunset.getTime() < nowTime.getTime()
+      return geoItem.current.sunrise > geoItem.current.dt
+        || geoItem.current.sunset < geoItem.current.dt
     }
 
     return {
@@ -50,7 +38,9 @@ export default defineComponent({
       <h1 class="title">Погода в Средиземье</h1>
 
       <ul class="weather-list unstyled-list">
-        <li class="weather-card" :class="isNight(geoItem)?'weather-card--night':''" v-for="geoItem in geoItems">
+        <li class="weather-card"
+            :class="{ 'weather-card--night': isNight(geoItem) }"
+            v-for="geoItem in geoItems">
           <div class="weather-alert" v-if="geoItem.alert">
             <span class="weather-alert__icon">⚠️</span>
             <span class="weather-alert__description">{{ geoItem.alert.sender_name }}:
