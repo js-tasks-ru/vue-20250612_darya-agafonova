@@ -1,26 +1,58 @@
-import { defineComponent } from 'vue'
+import {computed, defineComponent, ref} from 'vue'
 
 export default defineComponent({
   name: 'CalculatorApp',
 
-  setup() {},
+  setup() {
+    const firstNumber = ref(0);
+    const secondNumber = ref(0);
+    const operator = ref('sum');
+
+    const totalValue = computed(() => mathMagic())
+
+    function mathMagic() {
+      let totalValue = 0;
+      if (operator.value === 'sum') {
+        totalValue = firstNumber.value + secondNumber.value
+      }
+      if (operator.value === 'subtract') {
+        totalValue = firstNumber.value - secondNumber.value
+      }
+      if (operator.value === 'multiply') {
+        totalValue = firstNumber.value * secondNumber.value
+      }
+      if (operator.value === 'divide') {
+        totalValue = firstNumber.value / secondNumber.value
+      }
+
+      return totalValue
+    }
+
+    return {
+      firstNumber,
+      secondNumber,
+      operator,
+      totalValue,
+      mathMagic
+    }
+  },
 
   template: `
     <div class="calculator">
-      <input type="number" aria-label="First operand" />
+      <input type="number" aria-label="First operand" v-model="firstNumber"/>
 
       <div class="calculator__operators">
-        <label><input type="radio" name="operator" value="sum"/>➕</label>
-        <label><input type="radio" name="operator" value="subtract"/>➖</label>
-        <label><input type="radio" name="operator" value="multiply"/>✖</label>
-        <label><input type="radio" name="operator" value="divide"/>➗</label>
+        <label><input type="radio" name="operator" v-model="operator" value="sum"/>➕</label>
+        <label><input type="radio" name="operator" v-model="operator" value="subtract"/>➖</label>
+        <label><input type="radio" name="operator" v-model="operator" value="multiply"/>✖</label>
+        <label><input type="radio" name="operator" v-model="operator" value="divide"/>➗</label>
       </div>
 
-      <input type="number" aria-label="Second operand" />
+      <input type="number" aria-label="Second operand" v-model="secondNumber"/>
 
       <div>=</div>
 
-      <output>0</output>
+      <output> {{ totalValue }}</output>
     </div>
   `,
 })
